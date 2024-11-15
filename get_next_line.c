@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asajed <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 15:57:05 by asajed            #+#    #+#             */
-/*   Updated: 2024/11/15 23:55:37 by asajed           ###   ########.fr       */
+/*   Created: 2024/11/15 15:43:30 by asajed            #+#    #+#             */
+/*   Updated: 2024/11/15 23:51:46 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 int	buff_size(char *s)
 {
@@ -24,21 +24,10 @@ int	buff_size(char *s)
 	return (i);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
 char	*ft_strjoin(char *s1, char *s2)
 {
 	int		i;
 	int		j;
-	int		len;
 	char	*str;
 
 	i = 0;
@@ -56,7 +45,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (NULL);
 	ft_memcpy(str, s1, i);
 	ft_memcpy(str + i, s2, j);
-	str[len] = '\0';
+	str[i + j] = '\0';
 	free(s1);
 	free(s2);
 	return (str);
@@ -76,40 +65,29 @@ int	checkline(char *gline, int bytes)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer[OPEN_MAX];
+	static int	i;
+	static char	buffer[BUFFER_SIZE + 1];
+	static int	bytes;
 	char		*gline;
-	int			bytes;
-	int			len;
+	int			k;
 
-	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0)
-		return (NULL);
-	if (!buffer[fd])
-		buffer[fd] = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	bytes = 1;
-	gline = NULL;
-	len = 0;
-	while (bytes > 0)
+	if (i >= bytes)
 	{
-		if (buffer[fd][0] == '\0')
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		i = 0;
+		if (bytes <= 0)
 		{
-			bytes = read(fd, buffer[fd], BUFFER_SIZE);
-			if (bytes <= 0)
-				break ;
-			buffer[fd][bytes] = '\0';
-		}
-		len = buff_size(buffer[fd]);
-		gline = ft_strjoin(gline, ft_substr(buffer[fd], 0, len));
-		if (!gline)
+			ft_memset(buffer, 0, BUFFER_SIZE + 1);
 			return (NULL);
-		if (checkline(gline, bytes) == 1)
-		{
-			ft_memcpy(buffer[fd], buffer[fd] + len, BUFFER_SIZE - len + 1);
-			return (gline);
 		}
-		ft_memset(buffer[fd], 0, BUFFER_SIZE + 1);
+		buffer[bytes] = '\0';
 	}
-	if (bytes == 0 && gline && gline[0] != '\0')
-		return (gline);
-	free(gline);
-	return (NULL);
+	k = i;
+	i += buff_size(buffer + i);
+	gline = ft_substr(buffer, k, i - k);
+	if (checkline(gline, bytes) == 0)
+		gline = ft_strjoin(gline, get_next_line(fd));
+	if (!gline)
+		return (NULL);
+	return (gline);
 }
