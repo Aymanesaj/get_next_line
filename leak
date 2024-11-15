@@ -1,1 +1,1 @@
-cc -Wall -Wextra -Werror  test.c get_next_line_utils.c get_next_line.c -fsanitize=address ; ./a.out
+cc -Wall -Wextra -Werror  test.c get_next_line_utils_bonus.c get_next_line_bonus.c -fsanitize=address ; ./a.out

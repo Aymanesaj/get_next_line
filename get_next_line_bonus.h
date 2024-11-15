@@ -6,7 +6,7 @@
 /*   By: asajed <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:08:08 by asajed            #+#    #+#             */
-/*   Updated: 2024/11/15 16:09:27 by asajed           ###   ########.fr       */
+/*   Updated: 2024/11/15 21:51:38 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,15 @@
 # include <fcntl.h>
 # include <stdlib.h>
 
-char    *get_next_line(int fd);
-char    *ft_read(char *buffer, int fd);
+char	*get_next_line(int fd);
+int		ft_checkline(char *gline, int bytes);
+char	*ft_strdup(char *s1);
+char	*ft_strjoin(char *s1, char *s2);
+void	*ft_memset(void *b, int c, size_t len);
+char	*ft_strjoin(char *s1, char *s2);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 char	*ft_strchr(const char *s, int c);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 
 #endif

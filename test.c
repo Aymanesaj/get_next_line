@@ -8,7 +8,7 @@ int main()
     char *str;
     while((str = get_next_line(fd)))
     {
-        printf("%s",get_next_line(fd));
+        printf("%s",str);
         free(str);
     }
 }
