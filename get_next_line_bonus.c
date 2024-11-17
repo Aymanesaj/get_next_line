@@ -6,7 +6,7 @@
 /*   By: asajed <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:57:05 by asajed            #+#    #+#             */
-/*   Updated: 2024/11/15 23:55:37 by asajed           ###   ########.fr       */
+/*   Updated: 2024/11/17 22:17:16 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,32 +34,15 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char *update(char **buffer, char *gline, int len)
 {
-	int		i;
-	int		j;
-	int		len;
-	char	*str;
+    char *temp;
 
-	i = 0;
-	j = 0;
-	if (!s1 && !s2)
-		return (NULL);
-	if (!s2)
-		return (s1);
-	if (!s1)
-		return (s2);
-	i = ft_strlen(s1);
-	j = ft_strlen(s2);
-	str = (char *)malloc(i + j + 1);
-	if (!str)
-		return (NULL);
-	ft_memcpy(str, s1, i);
-	ft_memcpy(str + i, s2, j);
-	str[len] = '\0';
-	free(s1);
-	free(s2);
-	return (str);
+    temp = ft_strjoin(gline, ft_substr(*buffer, 0, len));
+    if (!temp)
+        return (NULL);
+    ft_memcpy(*buffer, *buffer + len, BUFFER_SIZE - len + 1);
+    return (temp);
 }
 
 int	checkline(char *gline, int bytes)
@@ -84,7 +67,11 @@ char	*get_next_line(int fd)
 	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!buffer[fd])
-		buffer[fd] = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	{
+		buffer[fd] = ft_calloc((BUFFER_SIZE + 1), 1);
+		if (!buffer[fd])
+			return (NULL);
+	}
 	bytes = 1;
 	gline = NULL;
 	len = 0;
@@ -98,18 +85,21 @@ char	*get_next_line(int fd)
 			buffer[fd][bytes] = '\0';
 		}
 		len = buff_size(buffer[fd]);
-		gline = ft_strjoin(gline, ft_substr(buffer[fd], 0, len));
+		gline = update(&buffer[fd], gline, len);
 		if (!gline)
 			return (NULL);
-		if (checkline(gline, bytes) == 1)
-		{
-			ft_memcpy(buffer[fd], buffer[fd] + len, BUFFER_SIZE - len + 1);
+		if (checkline(gline, bytes))
 			return (gline);
-		}
 		ft_memset(buffer[fd], 0, BUFFER_SIZE + 1);
 	}
 	if (bytes == 0 && gline && gline[0] != '\0')
 		return (gline);
-	free(gline);
+	if (gline)
+		free(gline);
+	if (buffer[fd])
+	{
+		free(buffer[fd]);
+		buffer[fd] = NULL;
+	}
 	return (NULL);
 }

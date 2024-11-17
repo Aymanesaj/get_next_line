@@ -6,7 +6,7 @@
 /*   By: asajed <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 19:47:38 by asajed            #+#    #+#             */
-/*   Updated: 2024/11/15 23:47:10 by asajed           ###   ########.fr       */
+/*   Updated: 2024/11/17 21:29:08 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,13 @@
 
 void	*ft_memset(void *b, int c, size_t len)
 {
-	size_t			i;
 	unsigned char	*dst;
 
-	dst = b;
-	i = 0;
-	while (i < len)
+	dst = (unsigned char *)b;
+	while (len--)
 	{
-		dst[i] = (unsigned char) c;
-		i++;
+		*dst = (unsigned char) c;
+		dst++;
 	}
 	return (b);
 }
@@ -30,11 +28,13 @@ void	*ft_memset(void *b, int c, size_t len)
 void	*ft_calloc(size_t count, size_t size)
 {
 	void	*s;
-
-	if (size != 0 && count > SIZE_MAX / size)
+	
+	if (count == 0 || size == 0)
+		return (NULL);
+	if (count > SIZE_MAX / size)
 		return (NULL);
 	s = malloc(count * size);
-	if (s == NULL)
+	if (!s)
 		return (NULL);
 	ft_memset (s, 0, count * size);
 	return (s);
@@ -65,10 +65,12 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*v;
 	size_t	s_len;
+	size_t	i;
 
 	if (!s)
 		return (NULL);
 	s_len = 0;
+	i = 0;
 	while (s[s_len])
 		s_len++;
 	if (start >= s_len)
@@ -76,29 +78,41 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (len > s_len - start)
 		len = s_len - start;
 	v = (char *)malloc(len + 1);
-	if (v == NULL)
+	if (!v)
 		return (NULL);
-	ft_strlcpy(v, s + start, (len + 1));
+	while (i < len && s[start])
+	{
+		v[i] = s[start];
+		i++;
+		start++;
+	}
+	v[i] = '\0';
 	return (v);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	size_t	i;
-	size_t	p;
+	int		i;
+	int		j;
+	char	*str;
 
-	p = 0;
-	while (src[p])
-		p++;
 	i = 0;
-	if (dstsize > 0)
-	{
-		while (i < dstsize - 1 && src[i])
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
-	}
-	return (p);
+	j = 0;
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s2)
+		return (s1);
+	if (!s1)
+		return (s2);
+	i = ft_strlen(s1);
+	j = ft_strlen(s2);
+	str = (char *)malloc(i + j + 1);
+	if (!str)
+		return (NULL);
+	ft_memcpy(str, s1, i);
+	ft_memcpy(str + i, s2, j);
+	str[i + j] = '\0';
+	free(s1);
+	free(s2);
+	return (str);
 }
