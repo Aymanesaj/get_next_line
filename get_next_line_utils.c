@@ -14,17 +14,30 @@
 
 void	*ft_memset(void *b, int c, size_t len)
 {
-	size_t			i;
 	unsigned char	*dst;
 
-	dst = b;
-	i = 0;
-	while (i < len)
+	dst = (unsigned char *)b;
+	while (len--)
 	{
-		dst[i] = (unsigned char) c;
-		i++;
+		*dst = (unsigned char) c;
+		dst++;
 	}
 	return (b);
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*s;
+	
+	if (count == 0 || size == 0)
+		return (NULL);
+	if (count > SIZE_MAX / size)
+		return (NULL);
+	s = malloc(count * size);
+	if (!s)
+		return (NULL);
+	ft_memset (s, 0, count * size);
+	return (s);
 }
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
@@ -48,27 +61,6 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
-{
-	size_t	i;
-	size_t	p;
-
-	p = 0;
-	while (src[p])
-		p++;
-	i = 0;
-	if (dstsize > 0)
-	{
-		while (i < dstsize - 1 && src[i])
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
-	}
-	return (p);
-}
-
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -83,19 +75,27 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*v;
 	size_t	s_len;
+	size_t	i;
 
 	if (!s)
 		return (NULL);
 	s_len = 0;
+	i = 0;
 	while (s[s_len])
 		s_len++;
 	if (start >= s_len)
-		return (malloc(1));
+		return (ft_calloc(1, 1));
 	if (len > s_len - start)
 		len = s_len - start;
-	v = (char *)malloc(len + 1);
-	if (v == NULL)
+	v = (char *)ft_calloc(len + 1, 1);
+	if (!v)
 		return (NULL);
-	ft_strlcpy(v, s + start, (len + 1));
+	while (i < len && s[start])
+	{
+		v[i] = s[start];
+		i++;
+		start++;
+	}
+	v[i] = '\0';
 	return (v);
 }

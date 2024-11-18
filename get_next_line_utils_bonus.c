@@ -104,8 +104,8 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (s1);
 	if (!s1)
 		return (s2);
-	i = ft_strlen(s1);
-	j = ft_strlen(s2);
+	i = lenght(s1, NULL);
+	j = lenght(s2, NULL);
 	str = (char *)malloc(i + j + 1);
 	if (!str)
 		return (NULL);

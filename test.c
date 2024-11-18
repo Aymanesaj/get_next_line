@@ -4,24 +4,28 @@
 
 int main()
 {
-        int fd = open("file1.txt", O_RDONLY);
-        fd = open("cdccd", O_RDONLY);
-        fd = open("aymane", O_RDONLY);
-        fd = open("leak", O_RDONLY);
-        printf("%s\n--------\n", get_next_line(3));
-        printf("%s\n--------\n", get_next_line(4));
-        printf("%s\n--------\n", get_next_line(4));
-        printf("%s\n--------\n", get_next_line(4));
-        printf("%s\n--------\n", get_next_line(4));
-        printf("%s\n--------\n", get_next_line(6));
-        printf("%s\n--------\n", get_next_line(3));
-        printf("%s\n--------\n", get_next_line(4));
-        printf("%s\n--------\n", get_next_line(3));
-        printf("%s\n--------\n", get_next_line(6));
-        printf("%s\n--------\n", get_next_line(3));
-        printf("%s\n--------\n", get_next_line(5));
-        printf("%s\n--------\n", get_next_line(4));
-        printf("%s\n--------\n", get_next_line(5));
+        int fd = open("cdccd", O_RDONLY);
+        // fd = open("cdccd", O_RDONLY);
+        // fd = open("aymane", O_RDONLY);
+        // fd = open("leak", O_RDONLY);
+        printf("%s", get_next_line(fd));
+        printf("%s", get_next_line(fd));
+        printf("%s", get_next_line(fd));
+        printf("%s", get_next_line(fd));
+        printf("%s", get_next_line(fd));
+        // printf("%s\n--------\n", get_next_line(4));
+        // printf("%s\n--------\n", get_next_line(4));
+        // printf("%s\n--------\n", get_next_line(4));
+        // printf("%s\n--------\n", get_next_line(4));
+        // printf("%s\n--------\n", get_next_line(6));
+        // printf("%s\n--------\n", get_next_line(3));
+        // printf("%s\n--------\n", get_next_line(4));
+        // printf("%s\n--------\n", get_next_line(3));
+        // printf("%s\n--------\n", get_next_line(6));
+        // printf("%s\n--------\n", get_next_line(3));
+        // printf("%s\n--------\n", get_next_line(5));
+        // printf("%s\n--------\n", get_next_line(4));
+        // printf("%s\n--------\n", get_next_line(5));
         
 }
 

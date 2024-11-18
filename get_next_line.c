@@ -17,6 +17,8 @@ int	buff_size(char *s)
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (-1);
 	while (s[i] != '\n' && s[i])
 		i++;
 	if (s[i] == '\n')
@@ -40,7 +42,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (s2);
 	i = ft_strlen(s1);
 	j = ft_strlen(s2);
-	str = (char *)malloc(i + j + 1);
+	str = (char *)ft_calloc((i + j + 1), 1);
 	if (!str)
 		return (NULL);
 	ft_memcpy(str, s1, i);
@@ -84,6 +86,8 @@ char	*get_next_line(int fd)
 	}
 	k = i;
 	i += buff_size(buffer + i);
+	if (i == -1)
+		return (NULL);
 	gline = ft_substr(buffer, k, i - k);
 	if (checkline(gline, bytes) == 0)
 		gline = ft_strjoin(gline, get_next_line(fd));
