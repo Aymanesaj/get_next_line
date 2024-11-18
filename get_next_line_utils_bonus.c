@@ -6,7 +6,7 @@
 /*   By: asajed <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 19:47:38 by asajed            #+#    #+#             */
-/*   Updated: 2024/11/17 21:29:08 by asajed           ###   ########.fr       */
+/*   Updated: 2024/11/18 23:06:06 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,26 @@ void	*ft_memset(void *b, int c, size_t len)
 	return (b);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+size_t	lenght(char *s, char *till_newline)
 {
-	void	*s;
-	
-	if (count == 0 || size == 0)
-		return (NULL);
-	if (count > SIZE_MAX / size)
-		return (NULL);
-	s = malloc(count * size);
-	if (!s)
-		return (NULL);
-	ft_memset (s, 0, count * size);
-	return (s);
+	size_t	i;
+
+	i = 0;
+	if (!s && !till_newline)
+		return (-1);
+	if (till_newline && !s)
+	{
+		while (till_newline[i] != '\n' && till_newline[i])
+			i++;
+		if (till_newline[i] == '\n')
+			i++;
+	}
+	if (s && !till_newline)
+	{
+		while (s[i])
+			i++;
+	}
+	return (i);
 }
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)

@@ -6,33 +6,11 @@
 /*   By: asajed <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:57:05 by asajed            #+#    #+#             */
-/*   Updated: 2024/11/18 18:14:16 by asajed           ###   ########.fr       */
+/*   Updated: 2024/11/18 23:04:21 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-
-size_t	lenght(char *s, char *till_newline)
-{
-	size_t	i;
-
-	i = 0;
-	if (!s && !till_newline)
-		return (-1);
-	if (till_newline && !s)
-	{
-		while (till_newline[i] != '\n' && till_newline[i])
-			i++;
-		if (till_newline[i] == '\n')
-			i++;
-	}
-	if (s && !till_newline)
-	{
-		while (s[i])
-			i++;
-	}
-	return (i);
-}
 
 char	*update(char **buffer, char *gline, int len)
 {
@@ -61,13 +39,28 @@ int	read_and_allocate(int fd, char **buffer)
 {
 	if (!*buffer)
 	{
-		*buffer = ft_calloc((BUFFER_SIZE + 1), 1);
+		*buffer = malloc(BUFFER_SIZE + 1);
 		if (!*buffer)
 			return (-1);
+		ft_memset(*buffer, 0, BUFFER_SIZE + 1);
 	}
 	if ((*buffer)[0] == '\0')
 		return (read(fd, *buffer, BUFFER_SIZE));
 	return (BUFFER_SIZE);
+}
+
+char	*ft_free(char **buffer, char **gline, int fd, int bytes)
+{
+	if (bytes == 0 && (*gline) && (*gline)[0] != '\0')
+		return ((*gline));
+	if ((*gline))
+		free((*gline));
+	if (buffer[fd])
+	{
+		free(buffer[fd]);
+		buffer[fd] = NULL;
+	}
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
@@ -93,11 +86,5 @@ char	*get_next_line(int fd)
 			return (gline);
 		ft_memset(buffer[fd], 0, BUFFER_SIZE + 1);
 	}
-	if (bytes == 0 && gline && gline[0] != '\0')
-		return (gline);
-	if (gline)
-		free(gline);
-	if (buffer[fd])
-		free(buffer[fd]);
-	return (NULL);
+	return (ft_free(buffer, &gline, fd, bytes));
 }

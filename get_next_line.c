@@ -12,45 +12,15 @@
 
 #include "get_next_line.h"
 
-int	buff_size(char *s)
+char	*update(char **buffer, char *gline, int len)
 {
-	int	i;
+	char	*temp;
 
-	i = 0;
-	if (!s)
-		return (-1);
-	while (s[i] != '\n' && s[i])
-		i++;
-	if (s[i] == '\n')
-		i++;
-	return (i);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	if (!s1 && !s2)
+	temp = ft_strjoin(gline, ft_substr(*buffer, 0, len));
+	if (!temp)
 		return (NULL);
-	if (!s2)
-		return (s1);
-	if (!s1)
-		return (s2);
-	i = ft_strlen(s1);
-	j = ft_strlen(s2);
-	str = (char *)ft_calloc((i + j + 1), 1);
-	if (!str)
-		return (NULL);
-	ft_memcpy(str, s1, i);
-	ft_memcpy(str + i, s2, j);
-	str[i + j] = '\0';
-	free(s1);
-	free(s2);
-	return (str);
+	ft_memcpy(*buffer, *buffer + len, BUFFER_SIZE - len + 1);
+	return (temp);
 }
 
 int	checkline(char *gline, int bytes)
@@ -65,33 +35,56 @@ int	checkline(char *gline, int bytes)
 	return (gline[i] == '\n');
 }
 
+int	read_and_allocate(int fd, char **buffer)
+{
+	if (!*buffer)
+	{
+		*buffer = malloc(BUFFER_SIZE + 1);
+		if (!*buffer)
+			return (-1);
+		ft_memset(*buffer, 0, BUFFER_SIZE + 1);
+	}
+	if ((*buffer)[0] == '\0')
+		return (read(fd, *buffer, BUFFER_SIZE));
+	return (BUFFER_SIZE);
+}
+
+char	*ft_free(char **buffer, char **gline, int fd, int bytes)
+{
+	if (bytes == 0 && (*gline) && (*gline)[0] != '\0')
+		return ((*gline));
+	if ((*gline))
+		free((*gline));
+	if (buffer[fd])
+	{
+		free(buffer[fd]);
+		buffer[fd] = NULL;
+	}
+	return (NULL);
+}
+
 char	*get_next_line(int fd)
 {
-	static int	i;
-	static char	buffer[BUFFER_SIZE + 1];
-	static int	bytes;
+	static char	*buffer[OPEN_MAX];
 	char		*gline;
-	int			k;
+	int			bytes;
 
-	if (i >= bytes)
+	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0)
+		return (NULL);
+	bytes = 1;
+	gline = NULL;
+	while (bytes > 0)
 	{
-		bytes = read(fd, buffer, BUFFER_SIZE);
-		i = 0;
+		bytes = read_and_allocate(fd, &buffer[fd]);
 		if (bytes <= 0)
-		{
-			ft_memset(buffer, 0, BUFFER_SIZE + 1);
+			break ;
+		buffer[fd][bytes] = '\0';
+		gline = update(&buffer[fd], gline, lenght(NULL, buffer[fd]));
+		if (!gline)
 			return (NULL);
-		}
-		buffer[bytes] = '\0';
+		if (checkline(gline, bytes))
+			return (gline);
+		ft_memset(buffer[fd], 0, BUFFER_SIZE + 1);
 	}
-	k = i;
-	i += buff_size(buffer + i);
-	if (i == -1)
-		return (NULL);
-	gline = ft_substr(buffer, k, i - k);
-	if (checkline(gline, bytes) == 0)
-		gline = ft_strjoin(gline, get_next_line(fd));
-	if (!gline)
-		return (NULL);
-	return (gline);
+	return (ft_free(buffer, &gline, fd, bytes));
 }

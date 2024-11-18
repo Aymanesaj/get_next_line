@@ -23,16 +23,12 @@
 #  define BUFFER_SIZE 100
 # endif
 
-int		buff_size(char *s);
 char	*get_next_line(int fd);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-void	*ft_memcpy(void *dst, const void *src, size_t n);
+int		ft_checkline(char *gline, int bytes);
 char	*ft_strjoin(char *s1, char *s2);
-int		checkline(char *gline, int bytes);
-void	ft_bzero(void *s, size_t n);
 void	*ft_memset(void *b, int c, size_t len);
-size_t	ft_strlen(const char *s);
-void	*ft_calloc(size_t count, size_t size);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+size_t	lenght(char *s, char *till_newline);
 
 #endif
