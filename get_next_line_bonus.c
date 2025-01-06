@@ -6,7 +6,7 @@
 /*   By: asajed <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:57:05 by asajed            #+#    #+#             */
-/*   Updated: 2024/11/18 23:04:21 by asajed           ###   ########.fr       */
+/*   Updated: 2024/11/19 15:18:22 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ char	*update(char **buffer, char *gline, int len)
 {
 	char	*temp;
 
+	if (!buffer)
+		return (NULL);
 	temp = ft_strjoin(gline, ft_substr(*buffer, 0, len));
 	if (!temp)
 		return (NULL);

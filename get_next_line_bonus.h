@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asajed <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:08:08 by asajed            #+#    #+#             */
-/*   Updated: 2024/11/16 15:04:20 by asajed           ###   ########.fr       */
+/*   Updated: 2025/01/06 10:30:19 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 100
+# endif
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1024
 # endif
 # include <string.h>
 # include <limits.h>
